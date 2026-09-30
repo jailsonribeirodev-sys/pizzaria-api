@@ -1,9 +1,12 @@
 package com.pizzaria.api.entities;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
@@ -14,6 +17,8 @@ public class Produto {
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
+    @OneToMany(mappedBy = "produto")
+    private Set<ItemPedido> itens = new HashSet<>();
 
     public Produto() {
 
