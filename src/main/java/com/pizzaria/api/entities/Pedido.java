@@ -2,18 +2,21 @@ package com.pizzaria.api.entities;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.pizzaria.api.enums.StatusPedido;
 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Data
 public class Pedido {
     private Long id;
-    private Set<ItemPedido> itens;
+    @OneToMany(mappedBy = "pedido")
+    private Set<ItemPedido> itens = new HashSet<>();
     @ManyToOne
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
