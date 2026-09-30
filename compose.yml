@@ -1,0 +1,38 @@
+services:
+  pizzaria:
+    image: postgres:17
+    container_name: pizzaria-db
+    restart: unless-stopped
+    ports:
+      - "5435:5432" # Acessível na sua API Java via localhost:5433
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pizzaria
+    volumes:
+      - pgdata-pizzaria:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d pizzaria" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Interface de Gerenciamento pgAdmin 4
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: unless-stopped
+    ports:
+      - "15435:80" # Acessível no seu navegador via http://localhost:15432
+    environment:
+      PGADMIN_DEFAULT_EMAIL: jailson.ribeirodev@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      pizzaria:
+        condition: service_healthy
+
+volumes:
+  pgdata-pizzaria:
+  pgadmin-data:
