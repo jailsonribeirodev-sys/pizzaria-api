@@ -10,18 +10,22 @@ import com.pizzaria.api.enums.StatusPedido;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
+@Entity
+@Table(name = "pedido")
 public class Pedido {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
-    @ManyToOne
-    @JoinColumn(name = "endereco_id")
-    private Endereco endereco;
     private BigDecimal total;
-    private StatusPedido status;
+    private Integer status;
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private Pagamento pagamento;
     private Instant dataHora;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -30,13 +34,12 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Long id, Cliente cliente, Endereco endereco,
-            BigDecimal total, StatusPedido status, Instant dataHora) {
+    public Pedido(Long id, Cliente cliente, BigDecimal total, StatusPedido status, Instant dataHora) {
         this.id = id;
         this.cliente = cliente;
-        this.endereco = endereco;
         this.total = total;
-        this.status = status;
+        setStatus(status);
         this.dataHora = dataHora;
     }
+
 }
