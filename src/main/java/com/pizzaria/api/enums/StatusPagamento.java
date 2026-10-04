@@ -1,4 +1,4 @@
-package main.java.com.pizzaria.api.enums;
+package com.pizzaria.api.enums;
 
 public enum StatusPagamento {
     PENDENTE(1),

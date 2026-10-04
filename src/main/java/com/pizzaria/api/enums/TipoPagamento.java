@@ -7,19 +7,19 @@ public enum TipoPagamento {
     DINHEIRO(4),
     VALE_REFEICAO(5);
 
-    private int code;
+    private Integer code;
 
-    TipoPagamento(int code) {
+    TipoPagamento(Integer code) {
         this.code = code;
     }
 
-    public int getCode() {
-        return code;
+    public Integer getCode() {
+        return this.code;
     }
 
-    public static TipoPagamento valueOf(int code) {
+    public static TipoPagamento valueOf(Integer code) {
         for (TipoPagamento value : TipoPagamento.values()) {
-            if (value.getCode() == code) {
+            if (value.getCode().equals(code)) {
                 return value;
             }
         }
