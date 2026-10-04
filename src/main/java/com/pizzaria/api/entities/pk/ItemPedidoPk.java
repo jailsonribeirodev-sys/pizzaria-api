@@ -5,11 +5,11 @@ import java.io.Serializable;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -19,5 +19,8 @@ public class ItemPedidoPk implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long produtoId;
     private Long pedidoId;
+
+    public ItemPedidoPk() {
+    }
 
 }

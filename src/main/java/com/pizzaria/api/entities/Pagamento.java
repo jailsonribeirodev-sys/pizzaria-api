@@ -2,25 +2,25 @@ package com.pizzaria.api.entities;
 
 import java.time.Instant;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pizzaria.api.enums.StatusPagamento;
 import com.pizzaria.api.enums.TipoPagamento;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import main.java.com.pizzaria.api.enums.StatusPagamento;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "pagamento")
 public class Pagamento {
@@ -37,10 +37,26 @@ public class Pagamento {
     private Instant dataHora;
 
     public Pagamento(Pedido pedido, TipoPagamento tipoPagamento, StatusPagamento statusPagamento, Instant dataHora) {
-        this.pedido = (pedido != null) ? pedido.getId() : null;
+        this.pedido = pedido;
         this.tipoPagamento = (tipoPagamento != null) ? tipoPagamento.getCode() : null;
         this.statusPagamento = (statusPagamento != null) ? statusPagamento.getCode() : null;
         this.dataHora = dataHora;
+    }
+
+    public TipoPagamento getTipoPagamento() {
+        return this.tipoPagamento != null ? TipoPagamento.valueOf(tipoPagamento) : null;
+    }
+
+    public void setTipoPagamento(TipoPagamento tipoPagamento) {
+        this.tipoPagamento = (tipoPagamento != null) ? tipoPagamento.getCode() : null;
+    }
+
+    public StatusPagamento getStatusPagamento() {
+        return this.statusPagamento != null ? StatusPagamento.valueOf(statusPagamento) : null;
+    }
+
+    public void setStatusPagamento(StatusPagamento statusPagamento) {
+        this.statusPagamento = (statusPagamento != null) ? statusPagamento.getCode() : null;
     }
 
 }

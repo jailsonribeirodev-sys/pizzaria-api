@@ -1,42 +1,43 @@
 package com.pizzaria.api.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "enderecos")
+@Table(name = "endereco")
 public class Endereco {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     private String rua;
-    private int numero;
+    private String numero;
     private String bairro;
     private String cidade;
     private String estado;
     private String cep;
     private String complemento;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public Endereco() {
-    }
-
-    public Endereco(Long id, String rua, int numero, String bairro, String cidade, String estado, String cep,
+    public Endereco(Long id, String rua, String numero, String bairro, String cidade, String estado, String cep,
             String complemento) {
         this.id = id;
         this.rua = rua;
@@ -47,4 +48,5 @@ public class Endereco {
         this.cep = cep;
         this.complemento = complemento;
     }
+
 }

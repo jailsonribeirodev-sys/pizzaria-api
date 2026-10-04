@@ -13,12 +13,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "pedido")
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
@@ -31,15 +46,20 @@ public class Pedido {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public Pedido() {
-    }
-
     public Pedido(Long id, Cliente cliente, BigDecimal total, StatusPedido status, Instant dataHora) {
         this.id = id;
         this.cliente = cliente;
         this.total = total;
         setStatus(status);
         this.dataHora = dataHora;
+    }
+
+    public StatusPedido getStatus() {
+        return status != null ? StatusPedido.valueOf(status) : null;
+    }
+
+    public void setStatus(StatusPedido status) {
+        this.status = (status != null) ? status.getCode() : null;
     }
 
 }

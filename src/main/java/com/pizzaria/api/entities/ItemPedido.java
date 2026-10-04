@@ -11,16 +11,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "item_pedido")
@@ -48,10 +47,15 @@ public class ItemPedido implements Serializable {
     private Pedido pedido;
 
     public ItemPedido(Produto produto, Pedido pedido, Integer quantidade, BigDecimal preco, String observacao) {
-        this.id.setProduto(produto);
-        this.id.setPedido(pedido);
+        this.pedido = pedido;
+        this.produto = produto;
+        if (produto != null)
+            this.id.setProdutoId(produto.getId());
+        if (pedido != null)
+            this.id.setPedidoId(pedido.getId());
         this.quantidade = quantidade;
         this.preco = preco;
         this.observacao = observacao;
     }
+
 }
