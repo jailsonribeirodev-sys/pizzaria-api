@@ -2,39 +2,22 @@ package com.pizzaria.api.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import com.pizzaria.api.entities.pk.ItemPedidoPk;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "item_pedido")
-
 public class ItemPedido implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @NotNull(message = "Quantidade é obrigatória")
     private Integer quantidade;
-    @NotNull(message = "Preço é obrigatório")
     private BigDecimal preco;
     private String observacao;
 
     @EmbeddedId
-    @EqualsAndHashCode.Include
     private ItemPedidoPk id = new ItemPedidoPk();
 
     @ManyToOne
@@ -45,6 +28,9 @@ public class ItemPedido implements Serializable {
     @MapsId("pedidoId")
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
+
+    public ItemPedido() {
+    }
 
     public ItemPedido(Produto produto, Pedido pedido, Integer quantidade, BigDecimal preco, String observacao) {
         this.pedido = pedido;
@@ -58,4 +44,70 @@ public class ItemPedido implements Serializable {
         this.observacao = observacao;
     }
 
+    public ItemPedidoPk getId() {
+        return id;
+    }
+
+    public void setId(ItemPedidoPk id) {
+        this.id = id;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public BigDecimal getPreco() {
+        return preco;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        this.preco = preco;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+    @Column(name = "subtotal")
+    public BigDecimal getSubtotal(){
+
+        return preco.multiply(new BigDecimal(quantidade));
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemPedido that = (ItemPedido) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

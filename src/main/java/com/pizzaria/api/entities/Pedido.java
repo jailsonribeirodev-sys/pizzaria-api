@@ -1,58 +1,57 @@
 package com.pizzaria.api.entities;
 
+import com.pizzaria.api.enums.StatusPedido;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import com.pizzaria.api.enums.StatusPedido;
-
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.Data;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "pedido")
 public class Pedido {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Long id;
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
-    private BigDecimal total;
+
     private Integer status;
+
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Pagamento pagamento;
+
     private Instant dataHora;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public Pedido(Long id, Cliente cliente, BigDecimal total, StatusPedido status, Instant dataHora) {
+    public Pedido() {
+    }
+
+    public Pedido(Long id, Cliente cliente, Integer status, Instant dataHora) {
         this.id = id;
         this.cliente = cliente;
-        this.total = total;
-        setStatus(status);
+        this.status = status;
         this.dataHora = dataHora;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
+
 
     public StatusPedido getStatus() {
         return status != null ? StatusPedido.valueOf(status) : null;
@@ -62,4 +61,48 @@ public class Pedido {
         this.status = (status != null) ? status.getCode() : null;
     }
 
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+
+    public Instant getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(Instant dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public BigDecimal getTotal() {
+        return itens.stream().map(ItemPedido::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pedido pedido = (Pedido) o;
+        return Objects.equals(id, pedido.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

@@ -1,6 +1,7 @@
 package com.pizzaria.api.entities;
 
 import java.time.Instant;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pizzaria.api.enums.StatusPagamento;
@@ -12,20 +13,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "pagamento")
 public class Pagamento {
     @Id
-    @EqualsAndHashCode.Include
     private Long id;
     @MapsId
     @JsonIgnore
@@ -36,10 +28,37 @@ public class Pagamento {
     private Integer statusPagamento;
     private Instant dataHora;
 
+    public Pagamento() {
+    }
+
     public Pagamento(Pedido pedido, TipoPagamento tipoPagamento, StatusPagamento statusPagamento, Instant dataHora) {
         this.pedido = pedido;
         this.tipoPagamento = (tipoPagamento != null) ? tipoPagamento.getCode() : null;
         this.statusPagamento = (statusPagamento != null) ? statusPagamento.getCode() : null;
+        this.dataHora = dataHora;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public Instant getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(Instant dataHora) {
         this.dataHora = dataHora;
     }
 
@@ -59,4 +78,16 @@ public class Pagamento {
         this.statusPagamento = (statusPagamento != null) ? statusPagamento.getCode() : null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pagamento pagamento = (Pagamento) o;
+        return Objects.equals(id, pagamento.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
