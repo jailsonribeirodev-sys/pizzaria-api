@@ -1,6 +1,5 @@
 package com.pizzaria.api.TestConfig;
 
-import com.pizzaria.api.dto_created.ClienteDTO;
 import com.pizzaria.api.entities.*;
 import com.pizzaria.api.enums.StatusPedido;
 import com.pizzaria.api.repositories.*;
@@ -57,7 +56,7 @@ public class testconfig implements CommandLineRunner {
 
         produtoRepository.saveAll(Arrays.asList(produto1, produto2));
 
-        Pedido pedido1 = new Pedido(null, cliente, 1, Instant.now());
+        Pedido pedido1 = new Pedido(null, cliente, StatusPedido.EM_PREPARO, Instant.now());
         ItemPedido item1 = new ItemPedido(produto1, pedido1, 10, new BigDecimal(68.32),"Pedido ok" );
         ItemPedido item2 = new ItemPedido(produto2, pedido1, 5, new BigDecimal(10),"Pedido ok" );
 

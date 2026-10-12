@@ -1,5 +1,6 @@
 package com.pizzaria.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pizzaria.api.enums.StatusPedido;
 import jakarta.persistence.*;
 
@@ -19,13 +20,14 @@ public class Pedido {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Set<ItemPedido> itens = new HashSet<>();
 
-    private Integer status;
+    private StatusPedido status;
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Pagamento pagamento;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant dataHora;
-
+    private Instant dataAtualizacao;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
@@ -33,10 +35,10 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Long id, Cliente cliente, Integer status, Instant dataHora) {
+    public Pedido(Long id, Cliente cliente, StatusPedido status, Instant dataHora) {
         this.id = id;
         this.cliente = cliente;
-        this.status = status;
+        setStatus(status);
         this.dataHora = dataHora;
     }
 
@@ -52,18 +54,22 @@ public class Pedido {
         return itens;
     }
 
+    @PrePersist
+    @PreUpdate
+    public void atualizarData() {
+        this.dataAtualizacao = Instant.now();
+    }
+
 
     public StatusPedido getStatus() {
-        return status != null ? StatusPedido.valueOf(status) : null;
+        return status != null ? StatusPedido.valueOf(status.getCode()) : null;
     }
 
     public void setStatus(StatusPedido status) {
-        this.status = (status != null) ? status.getCode() : null;
-    }
-
-    public void setStatus(Integer status) {
         this.status = status;
     }
+
+
 
     public Pagamento getPagamento() {
         return pagamento;
@@ -87,6 +93,14 @@ public class Pedido {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public Instant getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Instant dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     public BigDecimal getTotal() {
