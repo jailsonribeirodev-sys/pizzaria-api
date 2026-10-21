@@ -1,4 +1,4 @@
-package com.pizzaria.api.dto;
+package com.pizzaria.api.dto_response;
 
 import com.pizzaria.api.entities.Categoria;
 

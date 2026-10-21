@@ -1,8 +1,9 @@
-package com.pizzaria.api.dto;
+package com.pizzaria.api.dto_created;
 
 import com.pizzaria.api.entities.Endereco;
 
 public record EnderecoDTO(
+
         String rua,
         String numero,
         String bairro,

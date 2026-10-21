@@ -1,12 +1,11 @@
-package com.pizzaria.api.dto;
+package com.pizzaria.api.dto_response;
 
 import com.pizzaria.api.entities.ItemPedido;
-import com.pizzaria.api.entities.pk.ItemPedidoPk;
 
 import java.math.BigDecimal;
 
 public record ItemPedidoDTO(
-        Long id,
+        Long idProduto,
         String nome,
         Integer quantidade,
         BigDecimal preco,
