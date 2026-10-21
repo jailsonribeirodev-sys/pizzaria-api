@@ -34,3 +34,4 @@ build/
 
 *:Zone.Identifier
 *.session.sql
+*.swp
