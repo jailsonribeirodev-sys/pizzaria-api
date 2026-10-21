@@ -1,10 +1,9 @@
 package com.pizzaria.api.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -24,15 +23,16 @@ public class Cliente implements Serializable {
     @NotNull(message = "Telefone é obrigatório")
     private String telefone;
     @OneToMany(mappedBy = "cliente")
+
     private List<Pedido> pedidos = new ArrayList<>();
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Endereco> enderecos = new ArrayList<>();
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Endereco> enderecos = new HashSet<>();
 
     public Cliente() {
     }
 
-    public Cliente(Long id, String nome, String telefone, String cpfOuCnpj, String email) {
-        this.id = id;
+    public Cliente(String nome, String telefone, String cpfOuCnpj, String email) {
+
         this.nome = nome;
         this.telefone = telefone;
         this.cpfOuCnpj = cpfOuCnpj;
@@ -73,19 +73,23 @@ public class Cliente implements Serializable {
         this.pedidos = pedidos;
     }
 
-    public List<Endereco> getEnderecos() {
+    public Set<Endereco> getEnderecos() {
         return enderecos;
     }
 
-    public void setEnderecos(List<Endereco> enderecos) {
-        this.enderecos = enderecos;
+
+    public boolean addEndereco(Endereco endereco) {
+       boolean ok = this.enderecos.add(endereco);
+      if (ok){
+          endereco.setCliente(this);
+      }
+      return ok;
     }
 
-    public void addEndereco(Endereco endereco) {
-        this.enderecos.add(endereco);
-        endereco.setCliente(this);
+    public void addPedido(Pedido pedido) {
+        boolean ok = this.pedidos.add(pedido);
+            pedido.setCliente(this);
     }
-
     public String getCpfOuCnpj() {
         return cpfOuCnpj;
     }

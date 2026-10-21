@@ -23,23 +23,31 @@ public class Pedido {
     private StatusPedido status;
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Pagamento pagamento;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant dataHora;
     private Instant dataAtualizacao;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+    @ManyToOne
+    @JoinColumn(name="endereco_id")
+    private Endereco endereco;
 
     public Pedido() {
     }
 
-    public Pedido(Long id, Cliente cliente, StatusPedido status, Instant dataHora) {
-        this.id = id;
-        this.cliente = cliente;
+    public Pedido( StatusPedido status, Instant dataHora) {
+
         setStatus(status);
         this.dataHora = dataHora;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
     }
 
     public Long getId() {
@@ -68,8 +76,6 @@ public class Pedido {
     public void setStatus(StatusPedido status) {
         this.status = status;
     }
-
-
 
     public Pagamento getPagamento() {
         return pagamento;

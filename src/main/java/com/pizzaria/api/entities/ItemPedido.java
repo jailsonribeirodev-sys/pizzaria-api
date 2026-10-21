@@ -32,7 +32,7 @@ public class ItemPedido implements Serializable {
     public ItemPedido() {
     }
 
-    public ItemPedido(Produto produto, Pedido pedido, Integer quantidade, BigDecimal preco, String observacao) {
+    public ItemPedido(Produto produto, Pedido pedido, Integer quantidade, BigDecimal preco) {
         this.pedido = pedido;
         this.produto = produto;
         if (produto != null)
@@ -41,7 +41,7 @@ public class ItemPedido implements Serializable {
             this.id.setPedidoId(pedido.getId());
         this.quantidade = quantidade;
         this.preco = preco;
-        this.observacao = observacao;
+
     }
 
     public ItemPedidoPk getId() {

@@ -27,8 +27,8 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(Long id, String nome, BigDecimal preco, Instant dataCadastro) {
-        this.id = id;
+    public Produto(String nome, BigDecimal preco, Instant dataCadastro) {
+
         this.nome = nome;
         this.preco = preco;
         this.dataCadastro = dataCadastro;

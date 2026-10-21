@@ -4,7 +4,7 @@ public enum StatusPedido {
     RECEBIDO(1),
     EM_PREPARO(2),
     NO_FORNO(3),
-    EM_ROTA(4),
+    EM_ROTA (4),
     ENTREGUE(5),
     CANCELADO(6);
 

@@ -3,16 +3,13 @@ package com.pizzaria.api.entities;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pizzaria.api.enums.StatusPagamento;
 import com.pizzaria.api.enums.TipoPagamento;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "pagamento")
@@ -24,9 +21,14 @@ public class Pagamento {
     @OneToOne
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
+    @NotNull
     private Integer tipoPagamento;
+    @NotNull
     private Integer statusPagamento;
+
     private Instant dataHora;
+
+    private Instant dataAtualizacao;
 
     public Pagamento() {
     }
@@ -78,6 +80,19 @@ public class Pagamento {
         this.statusPagamento = (statusPagamento != null) ? statusPagamento.getCode() : null;
     }
 
+    public Instant getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(Instant dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
+    }
+
+    @PrePersist
+    @PreUpdate
+    public void atualizarDataPagamento(){
+        this.dataAtualizacao = Instant.now();
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

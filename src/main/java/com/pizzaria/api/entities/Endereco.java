@@ -1,15 +1,10 @@
 package com.pizzaria.api.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "endereco")
@@ -30,12 +25,15 @@ public class Endereco {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @OneToMany(mappedBy = "endereco")
+    private List<Pedido> pedido = new ArrayList<>();
+
     public Endereco() {
     }
 
-    public Endereco(Long id, String rua, String numero, String bairro, String cidade, String estado, String cep,
-            String complemento) {
-        this.id = id;
+    public Endereco(String rua, String numero, String bairro, String cidade, String estado, String cep,
+                    String complemento) {
+
         this.rua = rua;
         this.numero = numero;
         this.bairro = bairro;
@@ -64,6 +62,11 @@ public class Endereco {
     public String getNumero() {
         return numero;
     }
+
+    public List<Pedido> getPedido() {
+        return pedido;
+    }
+
 
     public void setNumero(String numero) {
         this.numero = numero;
@@ -119,14 +122,20 @@ public class Endereco {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Endereco endereco = (Endereco) o;
-        return Objects.equals(id, endereco.id);
+        return Objects.equals(rua, endereco.rua)
+                && Objects.equals(numero, endereco.numero)
+                && Objects.equals(bairro, endereco.bairro)
+                && Objects.equals(cidade, endereco.cidade)
+                && Objects.equals(estado, endereco.estado)
+                && Objects.equals(cep, endereco.cep)
+                && Objects.equals(complemento, endereco.complemento);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hash(rua, numero, bairro, cidade, estado, cep, complemento);
     }
 }
