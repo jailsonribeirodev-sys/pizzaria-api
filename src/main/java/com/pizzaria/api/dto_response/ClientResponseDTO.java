@@ -19,7 +19,7 @@ public record ClientResponseDTO(
                 c.getCpfOuCnpj(),
                 c.getEmail(),
                 c.getTelefone(),
-                c.getEnderecos() != null ? c.getEnderecos().stream().map(EnderecoResponseDTO::new).collect(Collectors.toSet()) : Set.of()
+                c.getEnderecos().stream().map(EnderecoResponseDTO::new).collect(Collectors.toSet())
         );
     }
 
