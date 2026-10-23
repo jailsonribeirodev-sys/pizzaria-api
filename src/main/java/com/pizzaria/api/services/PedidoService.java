@@ -7,11 +7,15 @@ import com.pizzaria.api.dto_created.PedidoCreatedDTO;
 import com.pizzaria.api.entities.*;
 import com.pizzaria.api.enums.StatusPagamento;
 import com.pizzaria.api.enums.StatusPedido;
+import com.pizzaria.api.exceptions.RecursoNaoEncontradoException;
 import com.pizzaria.api.repositories.ClienteRepository;
 import com.pizzaria.api.repositories.EnderecoRepository;
 import com.pizzaria.api.repositories.PedidoRepository;
 import com.pizzaria.api.repositories.ProdutoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -36,8 +40,8 @@ public class PedidoService {
 
     @Transactional
     public PedidoDTO createdPedido(PedidoCreatedDTO dto) {
-        Endereco endereco = enderecoRepository.findById(dto.idEndereco()).orElseThrow(() -> new RuntimeException("Endereço não achado!"));
-        Cliente cliente = clienteRepository.findById(dto.idCliente()).orElseThrow(() -> new RuntimeException("Cliente não achado!"));
+        Endereco endereco = enderecoRepository.findById(dto.idEndereco()).orElseThrow(() -> new RecursoNaoEncontradoException("Endereço com id " + dto.idEndereco()+" Nao Encontrado" ));
+        Cliente cliente = clienteRepository.findById(dto.idCliente()).orElseThrow(() -> new RecursoNaoEncontradoException("Cliente com id " + dto.idEndereco()+" Nao Encontrado" ));
         Pedido pedido = new  Pedido();
         pedido.setDataHora(Instant.now());
         pedido.setStatus(StatusPedido.EM_PREPARO);
@@ -53,24 +57,25 @@ public class PedidoService {
         cliente.addPedido(pedido);
         pedido = pedidoRepository.save(pedido);
         return new PedidoDTO(pedido);
+
     }
     public PedidoDTO updatePedido(Long id,
                                   StatusPedido status,
                                   StatusPagamento statusPagamento) {
-        Pedido findPedidoById = pedidoRepository.findById(id).orElse(null);
-        assert findPedidoById != null;
+        Pedido findPedidoById = pedidoRepository.findById(id).orElseThrow(()-> new RecursoNaoEncontradoException("Id "+id+" Nao Encontrado" ));
         findPedidoById.setStatus(status);
         findPedidoById.getPagamento().setStatusPagamento(statusPagamento);
         findPedidoById = pedidoRepository.save(findPedidoById);
         return new PedidoDTO(findPedidoById);
     }
 
-    public Optional<PedidoDTO> findById(Long id) {
-        return pedidoRepository.findById(id).map(PedidoDTO::new);
+    public PedidoDTO findById(Long id) {
+        return pedidoRepository.findById(id).map(PedidoDTO::new).orElseThrow(()-> new RecursoNaoEncontradoException("Id "+id+" não encontrado"));
     }
 
-    public List<PedidoDTO> findAll() {
-        return pedidoRepository.findAll().stream().map(PedidoDTO::new).toList();
+    public Page<PedidoDTO> findAll(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Pedido> dados =  pedidoRepository.findAll(pageable);
+        return dados.map(PedidoDTO::new);
     }
 
 }
