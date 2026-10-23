@@ -1,10 +1,11 @@
 package com.pizzaria.api.controllers;
 
 import com.pizzaria.api.dto_created.EnderecoCreatedDTO;
-import com.pizzaria.api.dto_created.responseDtoFormat.EnderecoFormatDTO;
 import com.pizzaria.api.dto_response.EnderecoResponseDTO;
+import com.pizzaria.api.dto_response.RespostaDeSucessoDTO;
 import com.pizzaria.api.services.ClienteService;
 import com.pizzaria.api.services.EnderecoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +25,13 @@ public class EnderecoController {
         this.enderecoService = enderecoService;
     }
     @PostMapping
-    public ResponseEntity<EnderecoFormatDTO> createEndereco(@RequestBody EnderecoCreatedDTO enderecoDTO) {
+    public ResponseEntity<RespostaDeSucessoDTO<Set<EnderecoResponseDTO>>> createEndereco(@Valid  @RequestBody EnderecoCreatedDTO enderecoDTO) {
 
-        Set<EnderecoResponseDTO> enderecoResponseDTO = enderecoService.save(enderecoDTO);
-        EnderecoFormatDTO enderecoFormat = new EnderecoFormatDTO(enderecoResponseDTO);
-      return   ResponseEntity.ok(enderecoFormat);
+     Set<EnderecoResponseDTO> enderecoResponseDTO = enderecoService.save(enderecoDTO);
+
+
+
+      return   ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Enderecos criados", "enderecos",enderecoResponseDTO));
     }
 
 
