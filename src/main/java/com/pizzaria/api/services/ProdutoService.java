@@ -33,9 +33,10 @@ public class ProdutoService {
         Categoria categoria = categoriaRepository.findById(dto.categoriaId())
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria com id " + dto.categoriaId() + " não encontrada"));
         for (ProdutoDTO produtoDTO : dto.produtos()) {
-            Produto produto = new Produto(produtoDTO.nome(), produtoDTO.preco(), Instant.now());
-            categoria.addProduto(produto);
-            produtoRepository.save(produto);
+            Produto produtoNovo = new Produto(produtoDTO.nome(), produtoDTO.preco(), Instant.now());
+            if (categoria.addProduto(produtoNovo)) {
+                produtoRepository.save(produtoNovo);
+            }
         }
         return categoriaRepository.save(categoria).getProdutos()
                 .stream().map(ProdutoDTO::new).collect(Collectors.toSet());
