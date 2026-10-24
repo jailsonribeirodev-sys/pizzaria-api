@@ -1,5 +1,6 @@
 package com.pizzaria.api.services;
 
+import com.pizzaria.api.dto_created.CreatedProdutoDTO;
 import com.pizzaria.api.dto_response.ProdutoDTO;
 import com.pizzaria.api.entities.Categoria;
 import com.pizzaria.api.entities.Produto;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
@@ -26,13 +29,16 @@ public class ProdutoService {
     }
 
     @Transactional
-    public ProdutoDTO createProduto(Long idCategoria, ProdutoDTO dto) {
-        Categoria categoria = categoriaRepository.findById(idCategoria)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria com id " + idCategoria + " não encontrada"));
-        Produto produto = new Produto(dto.nome(), dto.preco(), Instant.now());
-        categoria.addProduto(produto);
-        produto = produtoRepository.save(produto);
-        return new ProdutoDTO(produto);
+    public Set<ProdutoDTO> createProduto(CreatedProdutoDTO dto) {
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria com id " + dto.categoriaId() + " não encontrada"));
+        for (ProdutoDTO produtoDTO : dto.produtos()) {
+            Produto produto = new Produto(produtoDTO.nome(), produtoDTO.preco(), Instant.now());
+            categoria.addProduto(produto);
+            produtoRepository.save(produto);
+        }
+        return categoriaRepository.save(categoria).getProdutos()
+                .stream().map(ProdutoDTO::new).collect(Collectors.toSet());
     }
 
     public ProdutoDTO findById(Long id) {
