@@ -1,10 +1,12 @@
 package com.pizzaria.api.controllers;
 
+import com.pizzaria.api.dto_created.CreatedProdutoDTO;
 import com.pizzaria.api.dto_response.ProdutoDTO;
 import com.pizzaria.api.dto_response.RespostaDeSucessoDTO;
 import com.pizzaria.api.services.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Tag(name = "Produtos", description = "Endpoints para gerenciamento de produtos")
 @RestController
@@ -23,13 +26,11 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    @Operation(summary = "Criar um novo produto")
+    @Operation(summary = "Criar novos produtos")
     @PostMapping
-    public ResponseEntity<RespostaDeSucessoDTO<ProdutoDTO>> createProduto(
-            @RequestParam Long idCategoria,
-            @RequestBody ProdutoDTO dto) {
-        ProdutoDTO produto = produtoService.createProduto(idCategoria, dto);
-        return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Produto criado", "produto", produto));
+    public ResponseEntity<RespostaDeSucessoDTO<Set<ProdutoDTO>>> createProduto(@Valid @RequestBody CreatedProdutoDTO dto) {
+        Set<ProdutoDTO> produtos = produtoService.createProduto(dto);
+        return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Produtos criados", "produtos", produtos));
     }
 
     @Operation(summary = "Buscar produto por ID")
