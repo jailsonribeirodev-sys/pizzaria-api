@@ -1,8 +1,8 @@
 package com.pizzaria.api.entities;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
@@ -15,7 +15,7 @@ public class Categoria {
     private String nome;
     private String descricao;
     @OneToMany(mappedBy = "categoria")
-    private List<Produto> produtos = new ArrayList<>();
+    private Set<Produto> produtos = new HashSet<>();
 
     public Categoria() {
     }
@@ -49,17 +49,20 @@ public class Categoria {
         this.descricao = descricao;
     }
 
-    public List<Produto> getProdutos() {
+    public Set<Produto> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(List<Produto> produtos) {
+    public void setProdutos(Set<Produto> produtos) {
         this.produtos = produtos;
     }
 
-    public void addProduto(Produto produto){
-        this.produtos.add(produto);
-        produto.setCategoria(this);
+    public boolean addProduto(Produto produto) {
+        boolean ok = this.produtos.add(produto);
+        if (ok) {
+            produto.setCategoria(this);
+        }
+        return ok;
     }
 
     @Override

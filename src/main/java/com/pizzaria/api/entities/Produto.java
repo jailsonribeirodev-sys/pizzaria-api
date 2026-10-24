@@ -28,16 +28,17 @@ public class Produto {
     }
 
     public Produto(String nome, BigDecimal preco, Instant dataCadastro) {
-
         this.nome = nome;
         this.preco = preco;
         this.dataCadastro = dataCadastro;
     }
+
     @PrePersist
     @PreUpdate
-    public void atualizarData(){
+    public void atualizarData() {
         this.dataAtualizacao = Instant.now();
     }
+
     public Long getId() {
         return id;
     }
@@ -81,6 +82,7 @@ public class Produto {
     public Instant getDataCadastro() {
         return dataCadastro;
     }
+
     public void setDataCadastro(Instant dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
@@ -98,11 +100,11 @@ public class Produto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Produto produto = (Produto) o;
-        return Objects.equals(id, produto.id);
+        return Objects.equals(nome, produto.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(nome);
     }
 }
