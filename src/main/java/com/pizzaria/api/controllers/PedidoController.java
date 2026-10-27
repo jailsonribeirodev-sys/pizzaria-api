@@ -9,6 +9,7 @@ import com.pizzaria.api.exceptions.RecursoNaoEncontradoException;
 import com.pizzaria.api.services.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,7 +29,7 @@ public class PedidoController {
 
     @Operation(summary = "Criar um novo pedido")
     @PostMapping
-    public ResponseEntity<RespostaDeSucessoDTO<PedidoDTO>> createdPedido(@RequestBody PedidoCreatedDTO dto) {
+    public ResponseEntity<RespostaDeSucessoDTO<PedidoDTO>> createdPedido(@Valid @RequestBody PedidoCreatedDTO dto) {
         PedidoDTO pedido = pedidoService.createdPedido(dto);
         return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Status pedido e status pagamento atualizados ", "pedidos", pedido));
     }

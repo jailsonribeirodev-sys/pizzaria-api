@@ -5,6 +5,7 @@ import com.pizzaria.api.dto_response.RespostaDeSucessoDTO;
 import com.pizzaria.api.services.CategoriaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,7 +24,7 @@ public class CategoriaController {
 
     @Operation(summary = "Criar uma nova categoria")
     @PostMapping
-    public ResponseEntity<RespostaDeSucessoDTO<CategoriaDTO>> createCategoria(@RequestBody CategoriaDTO dto) {
+    public ResponseEntity<RespostaDeSucessoDTO<CategoriaDTO>> createCategoria(@Valid @RequestBody CategoriaDTO dto) {
         CategoriaDTO categoria = categoriaService.createCategoria(dto);
         return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Categoria criada", "categoria", categoria));
     }

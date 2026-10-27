@@ -6,6 +6,7 @@ import com.pizzaria.api.dto_response.RespostaDeSucessoDTO;
 import com.pizzaria.api.services.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,7 +25,7 @@ public class ClienteController {
 
     @Operation(summary = "Criar um novo cliente")
     @PostMapping
-    public ResponseEntity<RespostaDeSucessoDTO<ClientResponseDTO>> createCliente(@RequestBody ClienteDTO dto) {
+    public ResponseEntity<RespostaDeSucessoDTO<ClientResponseDTO>> createCliente(@Valid @RequestBody ClienteDTO dto) {
         ClientResponseDTO cliente = clienteService.createCliente(dto);
         return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Cliente criado", "cliente", cliente));
     }

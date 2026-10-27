@@ -54,7 +54,7 @@ public class EnderecoController {
     @PatchMapping("/{id}")
     public ResponseEntity<RespostaDeSucessoDTO<EnderecoResponseDTO>> updateEndereco(
             @PathVariable Long id,
-            @RequestBody EnderecoDTO dto) {
+            @Valid @RequestBody EnderecoDTO dto) {
         EnderecoResponseDTO endereco = enderecoService.updateEndereco(id, dto);
         return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Endereço atualizado", "endereco", endereco));
     }
