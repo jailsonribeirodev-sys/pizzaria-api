@@ -1,13 +1,16 @@
 package com.pizzaria.api.dto_created;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public record ItemPedidoCreatedDTO(
 
-      @NotNull  Long idProduto,
+        @NotNull(message = "Id do produto é obrigatório")
+        @Positive(message = "Id do produto deve ser positivo")
+        Long idProduto,
 
+        @NotNull(message = "Quantidade é obrigatória")
+        @Positive(message = "Quantidade deve ser maior que zero")
         Integer quantidade,
         String observacao
 ) {
