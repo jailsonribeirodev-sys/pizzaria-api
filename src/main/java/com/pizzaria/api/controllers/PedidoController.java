@@ -31,14 +31,14 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<RespostaDeSucessoDTO<PedidoDTO>> createdPedido(@Valid @RequestBody PedidoCreatedDTO dto) {
         PedidoDTO pedido = pedidoService.createdPedido(dto);
-        return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Status pedido e status pagamento atualizados ", "pedidos", pedido));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RespostaDeSucessoDTO<>(201, "Status pedido e status pagamento atualizados ", "pedido", pedido));
     }
 
     @Operation(summary = "Atualizar status do pedido")
     @PatchMapping("/{id}/")
     public ResponseEntity<RespostaDeSucessoDTO<PedidoDTO>> updatePedido(@PathVariable Long id, @RequestParam StatusPedido status, @RequestParam StatusPagamento statusPagamento) {
         PedidoDTO pedido = pedidoService.updatePedido(id, status, statusPagamento);
-        return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Status pedido e status pagamento atualizados ", "pedidos", pedido));
+        return ResponseEntity.ok(new RespostaDeSucessoDTO<>(200, "Status pedido e status pagamento atualizados ", "pedido", pedido));
     }
 
     @Operation(summary = "Buscar pedido por ID")
